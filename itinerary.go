@@ -13,7 +13,7 @@ import (
 
 type itinerary [7][24][]int
 
-func getItinerary(line string, stationIndex int, forward bool) itinerary {
+func getItinerary(line string, station int, forward bool) itinerary {
 	var output itinerary
 
 	c := colly.NewCollector()
@@ -120,7 +120,7 @@ func getItinerary(line string, stationIndex int, forward bool) itinerary {
 		direction = "intors"
 		linkIndex = 1
 	}
-	visitUrl, err := url.JoinPath("https://www.ratbv.ro", "afisaje", fmt.Sprintf("%s-%s", line, direction), fmt.Sprintf("line_%s_%d_cl%d_ro.html", line, stationIndex, linkIndex))
+	visitUrl, err := url.JoinPath("https://www.ratbv.ro", "afisaje", fmt.Sprintf("%s-%s", line, direction), fmt.Sprintf("line_%s_%d_cl%d_ro.html", line, station, linkIndex))
 	if err != nil {
 		log.Fatal(err)
 	}
