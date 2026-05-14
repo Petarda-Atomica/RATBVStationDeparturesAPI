@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push:
@@ -19,6 +18,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # This step converts your repo name to lowercase
+      - name: Lowercase repo name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -26,16 +30,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
-          labels: ${{ steps.meta.outputs.labels }}
+          # We use the lowercase env variable here
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
