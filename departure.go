@@ -19,29 +19,29 @@ func getRawItineraryOnDay(line string, station int, forward bool, day int) []int
 	return output
 }
 
-type lineStationCombo struct {
-	line    string
-	station int
-	forward bool
+type LineStationCombo struct {
+	Line    string `json:"line"`
+	Station int    `json:"station"`
+	Forward bool   `json:"forward"`
 }
 
 type Departure struct {
-	Line   string
-	Hour   int
-	Minute int
+	Line   string `json:"line"`
+	Hour   int    `json:"hour"`
+	Minute int    `json:"minute"`
 }
 
 type departureTimeTable []Departure
 
-func getDepartureTimeTable(day int, lines []lineStationCombo) departureTimeTable {
+func getDepartureTimeTable(day int, lines []LineStationCombo) departureTimeTable {
 	var output departureTimeTable
 
 	// Build unordered time-table
 	for _, combo := range lines {
-		this := getRawItineraryOnDay(combo.line, combo.station, combo.forward, day)
+		this := getRawItineraryOnDay(combo.Line, combo.Station, combo.Forward, day)
 		for _, val := range this {
 			output = append(output, Departure{
-				Line:   combo.line,
+				Line:   combo.Line,
 				Hour:   val / 60,
 				Minute: val % 60,
 			})
