@@ -1,0 +1,6 @@
+# .dockerignore
+bin/
+vendor/
+.git
+*.exe
+*.test

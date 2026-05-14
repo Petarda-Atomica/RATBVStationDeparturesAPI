@@ -43,7 +43,6 @@ func departureHandler(w http.ResponseWriter, r *http.Request) {
 func futureDepartureHandler(w http.ResponseWriter, r *http.Request) {
 	// Request payload
 	type requestPayload struct {
-		Count int                `json:"count"`
 		Lines []LineStationCombo `json:"lines"`
 	}
 
@@ -63,7 +62,7 @@ func futureDepartureHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call function
-	now := time.Now()
+	now := time.Now().In(loc)
 	result := getDepartureTimeTable((int(now.Weekday()+6) % 7), payload.Lines)
 
 	// Remove missed busses
@@ -84,7 +83,15 @@ func futureDepartureHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(table))
 }
 
+var loc *time.Location
+
 func main() {
+	var err error
+	loc, err = time.LoadLocation("Europe/Bucharest")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/all-departures", departureHandler)
 	mux.HandleFunc("/future-departures", futureDepartureHandler)

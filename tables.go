@@ -9,7 +9,7 @@ func styleTimeTable(input departureTimeTable) string {
 	var table string
 	table += "Bus,ETA,Plecare\n"
 
-	now := time.Now()
+	now := time.Now().In(loc)
 	nowMin := now.Hour()*60 + now.Minute()
 
 	for _, val := range input {
