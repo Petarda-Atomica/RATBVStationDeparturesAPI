@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   api:
+    build: .
     image: ratbv-departures-api
     ports:
       - "9001:8080"
